@@ -1,0 +1,7 @@
+# Regeneratable files
+node_modules/
+dist/
+
+# Configurations
+config.json
+*.taskconfig.json
