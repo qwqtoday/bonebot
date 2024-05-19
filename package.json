@@ -8,7 +8,7 @@
     "src"
   ],
   "scripts": {
-    "build": "npx tsc --noEmit | npx loose-ts-check",
+    "build": "npx tsc",
     "test": "npm run build && node ./dist/index.js",
     "lint": "npx eslint"
   },
