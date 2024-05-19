@@ -15,7 +15,7 @@ dependencies:
     specifier: ^4.19.2
     version: 4.19.2
   mineflayer:
-    specifier: link:mineflayer
+    specifier: link:./mineflayer
     version: link:mineflayer
   mineflayer-auto-eat:
     specifier: ^3.3.6
