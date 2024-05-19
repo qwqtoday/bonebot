@@ -12,7 +12,7 @@ async function main() {
 
 	for (const [nickname, worker] of workerManager.workers.entries()) {
 		workerManager.start(nickname);
-    await scheduler.wait(1500)
+    scheduler.wait(1500)
 	}
 }
 
