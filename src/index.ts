@@ -10,9 +10,9 @@ async function main() {
 	const workerManager = await createWorkerManager(config, db);
 
 
-	for (const [nickname, worker] of workerManager.workers.entries()) {
+	for (const [nickname, worker] of workerManager.workers) {
 		workerManager.start(nickname);
-    scheduler.wait(1500)
+    await scheduler.wait(1500)
 	}
 }
 
