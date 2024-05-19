@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from 'fs';
 
 export interface Config {
   name: string;
@@ -32,6 +32,6 @@ export interface InstanceConfig {
 }
 
 export function getConfig(): Config {
-  let content = fs.readFileSync("./config.json", "utf-8");
-  return JSON.parse(content);
+	const content = fs.readFileSync('./config.json', 'utf-8');
+	return JSON.parse(content);
 }

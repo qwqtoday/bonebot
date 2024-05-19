@@ -8,9 +8,8 @@
     "strict": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "exclude": ["dist"],
-  "include": ["src"]
+  "exclude": ["dist", "mineflayer"],
+  "include": ["./src/**/*"]
 }

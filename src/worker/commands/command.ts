@@ -1,14 +1,14 @@
-import { Bot } from "mineflayer";
-import task from "./task";
-import say from "./say";
-import look from "./look";
-import action from "./action";
-import toss from "./toss";
-import tp from "./tp";
-import sit from "./sit";
-import floor from "./floor";
-import attack from "./attack";
-import ciPut from "./ciPut";
+import { Bot } from 'mineflayer';
+import task from './task';
+import say from './say';
+import look from './look';
+import action from './action';
+import toss from './toss';
+import tp from './tp';
+import sit from './sit';
+import floor from './floor';
+import attack from './attack';
+import ciPut from './ciPut';
 
 export interface Command {
   name: string;
@@ -24,14 +24,14 @@ export interface CommandContext {
 }
 
 export const commands: { [name: string]: Command } = {
-  task,
-  say,
-  look,
-  action,
-  toss,
-  tp,
-  sit,
-  floor,
-  attack,
-  ciPut
+	task,
+	say,
+	look,
+	action,
+	toss,
+	tp,
+	sit,
+	floor,
+	attack,
+	ciPut,
 };

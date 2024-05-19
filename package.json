@@ -2,9 +2,14 @@
   "name": "bonebot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "src"
+  ],
   "scripts": {
-    "test": "npx tsc && node ./dist/index.js"
+    "test": "npx tsc --noEmit | npx loose-ts-check && node ./dist/index.js",
+    "lint": "standard && standard-markdown"
   },
   "keywords": [],
   "author": "",
@@ -23,8 +28,13 @@
     "vec3": "^0.1.10"
   },
   "devDependencies": {
+    "@eslint/js": "^9.3.0",
     "@types/pg": "^8.11.6",
     "drizzle-kit": "^0.21.2",
-    "prismarine-windows": "^2.9.0"
+    "eslint": "^9.3.0",
+    "globals": "^15.2.0",
+    "loose-ts-check": "^2.0.0",
+    "prismarine-windows": "^2.9.0",
+    "typescript-eslint": "^7.9.0"
   }
 }

@@ -1,16 +1,16 @@
-import { Command } from "./command";
+import { Command } from './command';
 
 export default {
-    name: "toss",
-    execute: async (context, bot) => {
-        const target = context.args[0]
-        if (target == "all") {
-            for (let i = 0; i < bot.inventory.items().length; i++) {
-                let item = bot.inventory.items()[i--];
-                await bot.tossStack(item);
-            }
-            return;
-        }
-        
-    }
-} satisfies Command
+	name: 'toss',
+	execute: async (context, bot) => {
+		const target = context.args[0];
+		if (target == 'all') {
+			for (let i = 0; i < bot.inventory.items().length; i++) {
+				const item = bot.inventory.items()[i--];
+				await bot.tossStack(item);
+			}
+			return;
+		}
+
+	},
+} satisfies Command;

@@ -3,9 +3,9 @@ export interface Message {
 }
 
 export interface CommandMessage extends Message {
-  type: "command";
+  type: 'command';
   command: string;
   args: string[];
 }
 
-export type MessageType = "command";
+export type MessageType = 'command';
