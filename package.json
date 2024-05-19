@@ -8,8 +8,9 @@
     "src"
   ],
   "scripts": {
-    "test": "npx tsc --noEmit | npx loose-ts-check && node ./dist/index.js",
-    "lint": "standard && standard-markdown"
+    "build": "npx tsc --noEmit | npx loose-ts-check",
+    "test": "npm run build && node ./dist/index.js",
+    "lint": "npx eslint"
   },
   "keywords": [],
   "author": "",
