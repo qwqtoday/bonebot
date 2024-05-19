@@ -1,73 +1,87 @@
 import { ChildProcess, fork } from "child_process";
 import { Config, InstanceConfig } from "./config";
-import { buildClientEnv } from "./bot/client-env";
+import { buildClientEnv } from "./worker/client-env";
 import { CommandMessage } from "./messages";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { workers } from "./database/tables/worker/workers";
+import { eq } from "drizzle-orm";
 
-export interface ClientManager {
-  clients: Map<string, Client>;
+export interface WorkerManager {
+  workers: Map<string, Worker>;
 
   start: (name: string) => void;
   stop: (name: string) => void;
-  getInfo: (name: string) => ClientInfo;
+  getInfo: (name: string) => WorkerInfo;
 
   executeCommand: (name: string, command: string, args: string[]) => void;
 }
 
-export interface Client {
+export interface Worker {
   process?: ChildProcess;
-  options: InstanceConfig;
   env: NodeJS.ProcessEnv;
-  state: ClientState;
-  info?: ClientInfo;
+  state: WorkerState;
+  info?: WorkerInfo;
 }
 
-export type ClientState = "STOPPED" | "STARTED";
+export type WorkerState = "STOPPED" | "STARTED";
 
-export interface ClientInfo {
+export interface WorkerInfo {
   currentIsland?: number;
 }
 
-export function createClientManager(config: Config): ClientManager {
-  const clients = new Map();
+export async function createWorkerManager(config: Config, db: NodePgDatabase): Promise<WorkerManager> {
+  const _workers = new Map();
 
-  config.minecraft.instances.forEach((instanceConfig) => {
-    const client: Client = {
-      options: instanceConfig,
+  let all_workers = await db.select().from(workers)
+  all_workers
+    .filter(({state}) => state == 1)
+    .forEach(
+      ({account, nickname}) => addWorker(nickname, account))
+
+  async function loadWorker(name: string) {
+    let res = await db.select().from(workers).where(eq(workers.nickname, name))
+    let workerData = res[0]
+
+    addWorker(workerData.nickname, workerData.account)
+  }
+
+  function addWorker(nickname: string, account: string) {
+    const worker: Worker = {
       state: "STOPPED",
       env: buildClientEnv({
         host: config.minecraft.host,
         port: config.minecraft.port,
-        account: instanceConfig.account,
-        nickname: instanceConfig.nickname,
+        account: account,
+        nickname: nickname,
       }),
       info: null,
     };
 
-    clients.set(instanceConfig.nickname, client);
-  });
-
-  function getClient(name: string): Client {
-    const client = clients.get(name);
-    if (client === undefined)
-      throw new ClientManagerError("No client with that specified name.", 404);
-
-    return client;
+    _workers.set(nickname, worker);
   }
 
-  function startClient(name: string) {
-    const client = getClient(name);
+  function getWorker(name: string): Worker {
+    const worker = _workers.get(name);
+    if (worker === undefined)
+      throw new ClientManagerError("No worker with that specified name.", 404);
+
+    return worker;
+  }
+
+  function startWorker(name: string) {
+    const client = getWorker(name);
     if (client.state != "STOPPED")
       throw new ClientManagerError("Client is not stopped.", 409);
 
-    const process = fork("./dist/bot/client.js", { env: client.env });
+    const process = fork("./dist/worker/worker.js", { env: client.env });
 
     client.process = process;
     client.state = "STARTED";
     client.info = {};
   }
 
-  function stopClient(name: string) {
-    const client = getClient(name);
+  function stopWorker(name: string) {
+    const client = getWorker(name);
     if (client.state == "STOPPED")
       throw new ClientManagerError("Client is already stopped.", 409);
 
@@ -76,17 +90,17 @@ export function createClientManager(config: Config): ClientManager {
     client.info = null;
   }
 
-  function getClientInfo(name: string): ClientInfo {
-    const client = getClient(name);
-    if (client.state != "STARTED")
+  function getWorkerInfo(name: string): WorkerInfo {
+    const worker = getWorker(name);
+    if (worker.state != "STARTED")
       throw new ClientManagerError("Client is not started.", 409);
 
-    return client.info;
+    return worker.info;
   }
 
   function executeCommand(name: string, command: string, args: string[]) {
-    const client = getClient(name);
-    if (client.state != "STARTED")
+    const worker = getWorker(name);
+    if (worker.state != "STARTED")
       throw new ClientManagerError("Client is not started.", 409);
 
     const message: CommandMessage = {
@@ -95,14 +109,14 @@ export function createClientManager(config: Config): ClientManager {
       args: args,
     };
 
-    client.process.send(JSON.stringify(message));
+    worker.process.send(JSON.stringify(message));
   }
 
-  const clientManager: ClientManager = {
-    clients: clients,
-    start: startClient,
-    stop: stopClient,
-    getInfo: getClientInfo,
+  const clientManager: WorkerManager = {
+    workers: _workers,
+    start: startWorker,
+    stop: stopWorker,
+    getInfo: getWorkerInfo,
     executeCommand: executeCommand,
   };
 

@@ -1,16 +1,19 @@
+import { scheduler } from "timers/promises";
 import { getConfig } from "./config";
-import { app } from "./app";
-import { createClientManager } from "./manager";
-import { scheduler } from "timers/promises"
+import { createWorkerManager } from "./manager";
+import { setup_database } from "./database/database";
 
-const config = getConfig()
-const clientManager = createClientManager(config)
 
-clientManager.clients.forEach((client) => {
-    clientManager.start(client.options.nickname)
-    scheduler.wait(3000)
-})
+async function main() {
+  const config = getConfig();
+  const db = await setup_database(config);
+  const workerManager = await createWorkerManager(config, db);
+  
 
-app.set("client manager", clientManager)
+  for (let [nickname, worker] of workerManager.workers.entries()) {
+    workerManager.start(nickname)
+    break;
+  }
+}
 
-app.listen(config.app.port)
+main()

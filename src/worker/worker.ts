@@ -1,10 +1,14 @@
 import { loadClientEnv } from "./client-env";
 import { Bot, BotOptions, createBot } from "mineflayer";
 import { taskManager } from "./task/task";
-import { loader as autoEat } from "@nxg-org/mineflayer-auto-eat";
+import { plugin as autoEat } from "mineflayer-auto-eat";
 import { Command, CommandContext, commands } from "./commands/command";
 import { getConfig } from "../config";
 import { CommandMessage, Message } from "../messages";
+import { setup_database } from "../database/database";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { getUserIdFromUUID, getUserLevel, users } from "../database/tables/user/users";
+import { getOwnerIdFromNickname } from "../database/tables/worker/workers";
 
 const env = loadClientEnv();
 const config = getConfig();
@@ -24,14 +28,30 @@ declare module "mineflayer" {
 }
 
 let bot: Bot;
-async function startBot() {
+async function startBot(db: NodePgDatabase = null) {
+  if (db === null) {
+    db = await setup_database(config)
+  }
+
   console.log(`starting bot ${env.nickname}`);
 
   bot = createBot(options);
+  
   // load plugins
-  bot.loadPlugin(taskManager);
+  taskManager(bot, db)
   bot.loadPlugin(autoEat);
 
+  bot._client.on("packet", (data, meta) => {
+    const excludedPackets = [
+      "ping",
+      "keep_alive",
+      "update_time",
+      "map_chunk"
+    ]
+
+    if (excludedPackets.includes(meta.name)) return;
+    console.log(meta.name, data)
+  })
   bot.nickname = env.nickname;
 
   bot.executeCommand = (context) => {
@@ -47,17 +67,27 @@ async function startBot() {
     }
   };
 
-  bot.on("whisper", (sender, message) => {
-    // Check is the user allowed to use this bot, if it is not, then return
-    if (!config.minecraft.allowed_users.includes(sender)) return;
+  bot.on("whisper", async (sender, message) => {
+    let uuid = bot.players[sender]?.uuid
+    if (uuid === null || uuid === undefined) return;
+    let user_id = await getUserIdFromUUID(db, uuid)
+    if (user_id === null)
+      return;
 
-    let [command, ...args] = message.split(" ");
-    bot.executeCommand({
-      name: command,
-      args: args,
-      raw: args.join(" "),
-      respond: (message) => bot.whisper(sender, message),
-    });
+    let user_level = await getUserLevel(db, user_id)
+    
+    let owner_id = await getOwnerIdFromNickname(db, bot.nickname)
+    
+    // Check is the user allowed to use this bot, if it is not, then return
+    if (user_level >= 2 || owner_id == user_id) {
+      let [command, ...args] = message.split(" ");
+      bot.executeCommand({
+        name: command,
+        args: args,
+        raw: args.join(" "),
+        respond: (message) => bot.whisper(sender, message),
+      });
+    }
   });
 
   bot.once("spawn", () => {
@@ -68,17 +98,22 @@ async function startBot() {
       ),
       "whisper",
     );
+    bot.autoEat.enable()
   });
 
   bot.once("end", (reason) => {
     console.log(
       `bot ${env.nickname} ended for ${reason}. restartting in 1 minutes`,
     );
-    setTimeout(startBot, 60000);
+    setTimeout(() => startBot(db), 60000);
   });
+  bot.on("dismount", () => {
+    console.log("dismount")
+  })
 
   bot.on("error", (err) => {
     console.error(`bot ${env.nickname} has occured an error.\n${err}`);
+    bot.end()
     bot.emit("end", err.message);
   });
 }

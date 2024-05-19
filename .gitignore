@@ -1,6 +1,7 @@
 # Regeneratable files
 node_modules/
 dist/
+drizzle/
 
 # Configurations
 config.json
