@@ -13,9 +13,6 @@ export default [
 		},
     files: [
       "src/**/*.ts"
-    ],
-    ignores: [
-      "mineflayer/**/*.js"
     ]
 	},
 	...tseslint.configs.stylistic

@@ -9,6 +9,7 @@ import { setup_database } from '../database/database';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { getUserIdFromUUID, getUserLevel } from '../database/tables/user/users';
 import { getOwnerIdFromNickname } from '../database/tables/worker/workers';
+import fs from "fs"
 
 const env = loadClientEnv();
 const config = getConfig();
@@ -17,6 +18,7 @@ const options: BotOptions = {
 	host: env.host,
 	port: env.port,
 	username: env.account,
+	version: config.minecraft.version,
 	auth: 'microsoft',
 };
 
@@ -36,7 +38,11 @@ async function startBot(db: NodePgDatabase | null = null) {
 	console.log(`starting bot ${env.nickname}`);
 
 	bot = createBot(options);
-
+	
+	console.log(`registry version ${bot.registry.version.minecraftVersion}`)
+	
+	// @ts-ignore
+	console.log(bot.registry.dimensionsByName)
 	// load plugins
 	taskManager(bot, db);
 	bot.loadPlugin(autoEat);

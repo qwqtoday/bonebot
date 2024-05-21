@@ -6,3 +6,7 @@ drizzle/
 # Configurations
 config.json
 *.taskconfig.json
+
+
+# Editor configuration
+.vscode
