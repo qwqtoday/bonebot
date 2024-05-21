@@ -1,4 +1,0 @@
-[submodule "mineflayer"]
-	path = mineflayer
-	url = https://github.com/qwqtoday/mineflayer.git
-	branch = modded
