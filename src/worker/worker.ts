@@ -49,9 +49,11 @@ async function startBot(db: NodePgDatabase | null = null) {
 	bot.loadPlugin(autoEat);
 	bot.loadPlugin(pathfinder)
 
-	bot.pathfinder.movements.allowSprinting = true
-	bot.pathfinder.movements.allowParkour = true
-	bot.pathfinder.movements.canDig = false
+	const movements = new Movements(bot)
+	bot.pathfinder.setMovements(movements)
+	movements.allowSprinting = true
+	movements.allowParkour = true
+	movements.canDig = false
 
 	bot.nickname = env.nickname;
 
