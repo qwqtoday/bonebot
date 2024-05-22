@@ -8,7 +8,8 @@
     "strict": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "maxNodeModuleJsDepth": 2
   },
   "exclude": ["dist", "node_modules"],
   "include": ["src"]
