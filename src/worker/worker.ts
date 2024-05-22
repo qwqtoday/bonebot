@@ -49,12 +49,6 @@ async function startBot(db: NodePgDatabase | null = null) {
 	bot.loadPlugin(autoEat);
 	bot.loadPlugin(pathfinder)
 
-	const movements = new Movements(bot)
-	bot.pathfinder.setMovements(movements)
-	movements.allowSprinting = true
-	movements.allowParkour = true
-	movements.canDig = false
-
 	bot.nickname = env.nickname;
 
 	bot.executeCommand = (context) => {
@@ -102,6 +96,13 @@ async function startBot(db: NodePgDatabase | null = null) {
 			'whisper',
 		);
 		bot.autoEat.enable();
+		
+		// setup movements
+		const movements = new Movements(bot)
+		bot.pathfinder.setMovements(movements)
+		movements.allowSprinting = true
+		movements.allowParkour = true
+		movements.canDig = false
 	});
 
 	bot.once('end', (reason) => {
