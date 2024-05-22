@@ -4,6 +4,7 @@ import fish from './tasks/fish';
 import ciPut from './tasks/ciPut';
 import floor from './tasks/floor';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import tnt_tag from './tasks/tnt_tag';
 
 declare module 'mineflayer' {
   interface Bot {
@@ -44,6 +45,7 @@ const tasks: { [name: string]: Task } = {
 	fish: fish,
 	ciPut: ciPut,
 	floor: floor,
+	tnt_tag
 };
 
 export function taskManager(bot: Bot, db: NodePgDatabase) {
@@ -78,10 +80,10 @@ export function taskManager(bot: Bot, db: NodePgDatabase) {
 			const hadRunProm = task.run(bot);
 			if (task.info.noDelay) return;
 			const hadRun =
-        hadRunProm instanceof Promise ? await hadRunProm : hadRunProm;
-			if (hadRun) {
-				bot.task.nextTaskRun = Date.now() + task.options.delay;
-			}
+        		hadRunProm instanceof Promise ? await hadRunProm : hadRunProm;
+					if (hadRun) {
+						bot.task.nextTaskRun = Date.now() + task.options.delay;
+					}
 		}
 		catch (err) {
 			console.error(err);
