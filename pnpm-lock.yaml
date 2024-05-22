@@ -16,7 +16,7 @@ dependencies:
     version: 4.19.2
   mineflayer:
     specifier: github:qwqtoday/mineflayer#modded
-    version: github.com/qwqtoday/mineflayer/25ca237bd87ba2fa897f171e4bc4f7b0d1966778
+    version: github.com/qwqtoday/mineflayer/982126b88ffaf8606e5353fbf68d2090ef16152c
   mineflayer-auto-eat:
     specifier: ^3.3.6
     version: 3.3.6
@@ -3121,8 +3121,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: true
 
-  github.com/qwqtoday/mineflayer/25ca237bd87ba2fa897f171e4bc4f7b0d1966778:
-    resolution: {tarball: https://codeload.github.com/qwqtoday/mineflayer/tar.gz/25ca237bd87ba2fa897f171e4bc4f7b0d1966778}
+  github.com/qwqtoday/mineflayer/982126b88ffaf8606e5353fbf68d2090ef16152c:
+    resolution: {tarball: https://codeload.github.com/qwqtoday/mineflayer/tar.gz/982126b88ffaf8606e5353fbf68d2090ef16152c}
     name: mineflayer
     version: 4.20.1
     engines: {node: '>=18'}
