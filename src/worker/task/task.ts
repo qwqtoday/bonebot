@@ -70,11 +70,13 @@ export function taskManager(bot: Bot, db: NodePgDatabase) {
 		bot.task.currentTask = name;
 	}
 	function stopTask() {
+		bot.pathfinder.stop()
+		bot.autoEat.options.offhand = true
 		bot.task.currentTask = null;
 	}
 
 	bot.on('physicsTick', async () => {
-		if (!bot.task.currentTask) return;
+		if (!bot.task.currentTask) return
 
 		const task = bot.task.tasks[bot.task.currentTask];
 		if (!task.info.noDelay && bot.task.nextTaskRun > Date.now()) return;
