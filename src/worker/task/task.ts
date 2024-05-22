@@ -64,6 +64,9 @@ export function taskManager(bot: Bot, db: NodePgDatabase) {
 
 
 	function startTask(name: string) {
+		if (!Object.keys(tasks).includes(name))
+			throw new Error("No task with that specified name")
+		
 		bot.task.currentTask = name;
 	}
 	function stopTask() {
