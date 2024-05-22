@@ -9,7 +9,7 @@ import { setup_database } from '../database/database';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { getUserIdFromUUID, getUserLevel } from '../database/tables/user/users';
 import { getOwnerIdFromNickname } from '../database/tables/worker/workers';
-import fs from "fs"
+import { Movements, pathfinder } from 'mineflayer-pathfinder';
 
 const env = loadClientEnv();
 const config = getConfig();
@@ -43,9 +43,15 @@ async function startBot(db: NodePgDatabase | null = null) {
 	
 	// @ts-ignore
 	console.log(bot.registry.dimensionsByName)
+
 	// load plugins
 	taskManager(bot, db);
 	bot.loadPlugin(autoEat);
+	bot.loadPlugin(pathfinder)
+
+	bot.pathfinder.movements.allowSprinting = true
+	bot.pathfinder.movements.allowParkour = true
+	bot.pathfinder.movements.canDig = false
 
 	bot.nickname = env.nickname;
 
