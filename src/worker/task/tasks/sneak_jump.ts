@@ -18,7 +18,7 @@ export default {
 		return true;
 	},
 	default_options: {
-		delay: 1500,
+		delay: 10000,
 		entities: [],
 	},
 	info: {
