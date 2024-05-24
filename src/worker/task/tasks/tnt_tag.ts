@@ -57,6 +57,7 @@ export default {
 		if (bot.entity.passengers.length !== 0) {
 			const nearestPlayer = bot
 				.nearestEntity((entity) => playerFilter(entity) && bot.entity != entity)
+			if (nearestPlayer === null) return;
 			if (bot.entity.position.distanceTo(nearestPlayer.position) <= 2.9) {
 				bot.attack(nearestPlayer)
 			}

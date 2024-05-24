@@ -22,7 +22,7 @@
     "mineflayer": "github:qwqtoday/mineflayer#modded",
     "mineflayer-auto-eat": "^3.3.6",
     "mineflayer-cuboid": "^1.0.1",
-    "mineflayer-pathfinder": "^2.4.5",
+    "mineflayer-pathfinder": "github:qwqtoday/mineflayer-pathfinder",
     "pg": "^8.11.5",
     "postgres": "^3.4.4",
     "prismarine-entity": "^2.4.0",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@eslint/js": "^9.3.0",
     "@types/pg": "^8.11.6",
-    "drizzle-kit": "^0.21.2",
+    "drizzle-kit": "^0.21.4",
     "eslint": "^8.57.0",
     "globals": "^15.3.0",
     "loose-ts-check": "^2.0.0",

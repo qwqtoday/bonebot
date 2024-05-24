@@ -5,6 +5,7 @@ import ciPut from './tasks/ciPut';
 import floor from './tasks/floor';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import tnt_tag from './tasks/tnt_tag';
+import sneak_jump from './tasks/sneak_jump';
 
 declare module 'mineflayer' {
   interface Bot {
@@ -45,7 +46,8 @@ const tasks: { [name: string]: Task } = {
 	fish: fish,
 	ciPut: ciPut,
 	floor: floor,
-	tnt_tag
+	tnt_tag,
+	sneak_jump
 };
 
 export function taskManager(bot: Bot, db: NodePgDatabase) {
