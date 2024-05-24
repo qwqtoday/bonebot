@@ -9,21 +9,15 @@ export default {
 		bot.autoEat.options.offhand = true;
 		const options = bot.task.tasks[NAME].options;
 		const entities: number[] = (options.entities as string[]).map((entityName) => bot.registry.entitiesByName[entityName]?.id);
-		const nearbyEntities = Object.values(bot.entities)
-			.filter(
-				(entity) =>
-					entities.includes(entity.entityType) &&
-          bot.entity.position.distanceTo(entity.position) < 3,
-			)
-			.sort(
-				(entity_a, entity_b) =>
-					bot.entity.position.distanceTo(entity_a.position) -
-          bot.entity.position.distanceTo(entity_b.position),
-			);
+		const nearestEntity = bot.nearestEntity(
+			(entity) =>
+				entities.includes(entity.entityType) &&
+          		bot.entity.position.distanceTo(entity.position) < 3,
+		)
 
-		if (nearbyEntities.length == 0) return false;
+		if (nearestEntity === null) return false;
 
-		bot.attack(nearbyEntities[0]);
+		bot.attack(nearestEntity);
 		return true;
 	},
 	default_options: {
