@@ -10,6 +10,7 @@ import floor from './floor';
 import attack from './attack';
 import ciPut from './ciPut';
 import goto from './goto';
+import equip from './equip';
 
 export interface Command {
   name: string;
@@ -35,5 +36,6 @@ export const commands: { [name: string]: Command } = {
 	floor,
 	attack,
 	ciPut,
-	goto
+	goto,
+	equip
 };
