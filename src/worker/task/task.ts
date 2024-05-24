@@ -61,6 +61,8 @@ export function taskManager(bot: Bot, db: NodePgDatabase) {
 
 
 	Object.values(tasks).forEach((task) => {
+		task.options = Object()
+		Object.assign(task.options, task.default_options)
 		task.load(bot);
 	});
 
