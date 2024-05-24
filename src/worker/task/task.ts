@@ -86,13 +86,9 @@ export function taskManager(bot: Bot, db: NodePgDatabase) {
 		if (!task.info.noDelay && bot.task.nextTaskRun > Date.now()) return;
 
 		try {
-			const hadRunProm = task.run(bot);
+			task.run(bot);
 			if (task.info.noDelay) return;
-			const hadRun =
-        		hadRunProm instanceof Promise ? await hadRunProm : hadRunProm;
-					if (hadRun) {
-						bot.task.nextTaskRun = Date.now() + task.options.delay;
-					}
+			bot.task.nextTaskRun = Date.now() + task.options.delay;
 		}
 		catch (err) {
 			console.error(err);
