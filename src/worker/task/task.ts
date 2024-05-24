@@ -79,7 +79,7 @@ export function taskManager(bot: Bot, db: NodePgDatabase) {
 		bot.task.currentTask = null;
 	}
 
-	bot.on('physicsTick', async () => {
+	bot.on('physicsTick', () => {
 		if (!bot.task.currentTask) return
 
 		const task = bot.task.tasks[bot.task.currentTask];
